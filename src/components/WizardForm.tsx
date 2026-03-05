@@ -334,49 +334,89 @@ export function WizardForm() {
                  <p className="text-gray-600 font-medium animate-pulse">Analyzing transcript & weaving the Golden Thread...</p>
                </div>
              ) : generatedSOP ? (
-               <div id="sop-document" className="flex-1 bg-white rounded-2xl p-6 md:p-8 border border-gray-200 overflow-y-auto h-[400px] text-gray-800 text-[15px] leading-relaxed space-y-6 shadow-inner relative">
-                 <div className="sticky top-0 bg-white/90 backdrop-blur-sm pb-3 border-b border-gray-100 mb-5 z-10">
-                   <h3 className="text-xl font-bold text-gray-900">Statement of Purpose: {formData.university.program || "Program"} ({formData.university.targetUniversity || "University"})</h3>
-                 </div>
-                 
-                 <div className="group">
-                    <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">1</span>
-                      Introduction (Hook & Motivation)
-                    </h4>
-                    <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
-                      {generatedSOP.introduction}
-                    </p>
+               <div className="flex flex-col lg:flex-row gap-6 h-[400px]">
+                 {/* Left Column: SOP Editor View */}
+                 <div id="sop-document" className="flex-1 bg-white rounded-2xl p-6 md:p-8 border border-gray-200 overflow-y-auto text-gray-800 text-[15px] leading-relaxed space-y-6 shadow-inner relative lg:w-2/3">
+                   <div className="sticky top-0 bg-white/90 backdrop-blur-sm pb-3 border-b border-gray-100 mb-5 z-10">
+                     <h3 className="text-xl font-bold text-gray-900">Statement of Purpose: {formData.university.program || "Program"} ({formData.university.targetUniversity || "University"})</h3>
+                   </div>
+                   
+                   <div className="group">
+                      <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">1</span>
+                        Introduction (Hook & Motivation)
+                      </h4>
+                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
+                        {generatedSOP.introduction}
+                      </p>
+                   </div>
+
+                   <div className="group">
+                      <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">2</span>
+                        Academic Foundation (The Spike)
+                      </h4>
+                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
+                        {generatedSOP.academic}
+                      </p>
+                   </div>
+
+                   <div className="group">
+                      <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">3</span>
+                        Professional & Experiential Proof
+                      </h4>
+                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
+                        {generatedSOP.professional}
+                      </p>
+                   </div>
+                   
+                   <div className="group">
+                     <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">4</span>
+                        Why This University & Future Goals
+                     </h4>
+                     <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
+                       {generatedSOP.futureGoals}
+                     </p>
+                   </div>
                  </div>
 
-                 <div className="group">
-                    <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">2</span>
-                      Academic Foundation (The Spike)
-                    </h4>
-                    <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
-                      {generatedSOP.academic}
-                    </p>
-                 </div>
-
-                 <div className="group">
-                    <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">3</span>
-                      Professional & Experiential Proof
-                    </h4>
-                    <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
-                      {generatedSOP.professional}
-                    </p>
-                 </div>
-                 
-                 <div className="group">
-                   <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">4</span>
-                      Why This University & Future Goals
-                   </h4>
-                   <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
-                     {generatedSOP.futureGoals}
+                 {/* Right Column: Consultant Sidebar */}
+                 <div className="w-full lg:w-1/3 bg-gray-50 rounded-2xl p-6 border border-gray-200 overflow-y-auto shadow-inner space-y-4">
+                   <div className="flex items-center gap-3 border-b border-gray-200 pb-3 mb-4 sticky top-0 bg-gray-50/90 backdrop-blur-sm z-10">
+                     <div className="bg-brand-primary/10 p-2 rounded-xl text-brand-primary">
+                       <Award size={20} />
+                     </div>
+                     <h3 className="font-bold text-gray-900">Ivy Analysis</h3>
+                   </div>
+                   
+                   <p className="text-sm text-gray-500 mb-4">
+                     Our AI analyzed your essay against Tanabe's success principles from <i>50 Successful Ivy League Application Essays</i>.
                    </p>
+
+                   {generatedSOP.analysis && Array.isArray(generatedSOP.analysis) ? (
+                     <div className="space-y-4">
+                       {generatedSOP.analysis.map((insight: any, idx: number) => (
+                         <div key={idx} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm relative group hover:border-brand-primary/30 transition-colors">
+                           <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-green-500"></div>
+                           <h5 className="font-bold text-sm text-gray-800 capitalize mb-1 pr-6 flex items-center gap-2">
+                             Paragraph {idx + 1}: {insight.paragraph}
+                           </h5>
+                           <div className="inline-flex max-w-full text-xs font-semibold text-brand-primary bg-brand-primary/5 px-2 py-1 rounded-md mb-2 truncate">
+                             {insight.principle}
+                           </div>
+                           <p className="text-sm text-gray-600 leading-relaxed">
+                             {insight.explanation}
+                           </p>
+                         </div>
+                       ))}
+                     </div>
+                   ) : (
+                     <div className="text-sm text-gray-400 italic p-4 bg-white rounded-xl border border-gray-100 text-center">
+                       No analysis data returned.
+                     </div>
+                   )}
                  </div>
                </div>
              ) : (
