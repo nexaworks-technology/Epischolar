@@ -70,25 +70,56 @@ export function WizardForm() {
 
   const handleDownloadPDF = async () => {
     setIsDownloading(true);
-    const element = document.getElementById("sop-document");
-    if (!element) {
-      setIsDownloading(false);
-      return;
-    }
-
+    
     try {
-      const canvas = await html2canvas(element, { 
-        scale: 2, 
-        useCORS: true, 
-        backgroundColor: '#ffffff' 
-      });
-      const imgData = canvas.toDataURL("image/png");
+      if (!generatedSOP) return;
+      
       const pdf = new jsPDF("p", "mm", "a4");
+      const margin = 20;
+      let y = 20;
       
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      // Title
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(16);
+      const title = `Statement of Purpose: ${formData.university.program || "Program"} (${formData.university.targetUniversity || "University"})`;
+      const titleLines = pdf.splitTextToSize(title, 170);
+      pdf.text(titleLines, margin, y);
+      y += titleLines.length * 8 + 10;
       
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const addSection = (title: string, content: string) => {
+        // Check if we need a new page for the title
+        if (y > 270) {
+          pdf.addPage();
+          y = 20;
+        }
+        
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(12);
+        pdf.text(title, margin, y);
+        y += 8;
+        
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(11);
+        const lines = pdf.splitTextToSize(content || "", 170);
+        
+        // Add text line by line to handle page breaks
+        for (let i = 0; i < lines.length; i++) {
+          if (y > 275) {
+            pdf.addPage();
+            y = 20;
+          }
+          pdf.text(lines[i], margin, y);
+          y += 6; // line height
+        }
+        
+        y += 8; // spacing after section
+      };
+
+      addSection("1. Introduction (Hook & Motivation)", generatedSOP.introduction);
+      addSection("2. Academic Foundation (The Spike)", generatedSOP.academic);
+      addSection("3. Professional & Experiential Proof", generatedSOP.professional);
+      addSection("4. Why This University & Future Goals", generatedSOP.futureGoals);
+
       pdf.save(`${formData.university.targetUniversity || "University"}_SOP_Draft.pdf`);
     } catch (error) {
       console.error("Failed to generate PDF:", error);
