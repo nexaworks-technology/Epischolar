@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Epischolar SOP SaaS",
-  description: "AI-Powered SOP Discovery & Generation SaaS",
+  title: "Epischolar Essay SaaS",
+  description: "AI-Powered College Essay Discovery & Generation SaaS",
 };
 
 export default function RootLayout({

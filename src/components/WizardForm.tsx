@@ -9,22 +9,19 @@ import jsPDF from "jspdf";
 
 type FormData = {
   university: { targetUniversity: string; program: string; qualities: string; longTermGoal: string; };
-  academics: { highestDegree: string; major: string; universityStudied: string; gpa: string; relevantCourses: string; academicAchievements: string; projects: string; };
-  workExperience: { company: string; description: string; skillsLearned: string; jobTitle: string; responsibilities: string; projectsWorkedOn: string; };
+  personalBackground: { story: string; challenge: string; perspective: string; };
   extraCurricular: { organizations: string; hobbies: string; awards: string; };
 };
 
 const initialData: FormData = {
   university: { targetUniversity: "", program: "", qualities: "", longTermGoal: "" },
-  academics: { highestDegree: "", major: "", universityStudied: "", gpa: "", relevantCourses: "", academicAchievements: "", projects: "" },
-  workExperience: { company: "", description: "", skillsLearned: "", jobTitle: "", responsibilities: "", projectsWorkedOn: "" },
+  personalBackground: { story: "", challenge: "", perspective: "" },
   extraCurricular: { organizations: "", hobbies: "", awards: "" }
 };
 
 const STEPS = [
   { id: "university", title: "University", icon: Building2, subtitle: "Dream School" },
-  { id: "academics", title: "Academics", icon: GraduationCap, subtitle: "Education Base" },
-  { id: "work", title: "Experience", icon: Briefcase, subtitle: "Work & Roles" },
+  { id: "background", title: "Background", icon: GraduationCap, subtitle: "Core Identity" },
   { id: "extracurricular", title: "Activities", icon: Award, subtitle: "Clubs & Hobbies" },
   { id: "chatbot", title: "Discovery AI", icon: MessageSquare, subtitle: "Interview" },
 ];
@@ -60,7 +57,7 @@ export function WizardForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>(initialData);
   const [chatMessages, setChatMessages] = useState<{role: 'model' | 'user', parts: {text: string}[]}[]>([
-    { role: 'model', parts: [{ text: 'Hi! I am the Discovery AI. I have reviewed your background information. To start, what would you say is your most unique trait or experience that you want to highlight in your SOP?' }] }
+    { role: 'model', parts: [{ text: 'Hi! I am the Discovery AI. I have reviewed your background information. To start, what would you say is your most unique trait or experience that you want to highlight in your Ivy League Application Essay?' }] }
   ]);
   const [chatInput, setChatInput] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
@@ -120,7 +117,7 @@ export function WizardForm() {
       addSection("3. Professional & Experiential Proof", generatedSOP.professional);
       addSection("4. Why This University & Future Goals", generatedSOP.futureGoals);
 
-      pdf.save(`${formData.university.targetUniversity || "University"}_SOP_Draft.pdf`);
+      pdf.save(`${formData.university.targetUniversity || "University"}_Essay_Draft.pdf`);
     } catch (error) {
       console.error("Failed to generate PDF:", error);
       alert("Error generating PDF.");
@@ -130,11 +127,11 @@ export function WizardForm() {
   };
 
   const handleGenerateSOP = async () => {
-    setCurrentStep(5);
+    setCurrentStep(4); // Only 5 steps total now (0, 1, 2, 3, 4)
     setIsGenerating(true);
     
     try {
-      const response = await fetch('/api/generate-sop', {
+      const response = await fetch('/api/generate-essay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -149,7 +146,7 @@ export function WizardForm() {
       setGeneratedSOP(data);
     } catch (error) {
        console.error(error);
-       alert("An error occurred while generating your SOP. Please try again.");
+       alert("An error occurred while generating your Essay. Please try again.");
     } finally {
       setIsGenerating(false);
     }
@@ -233,38 +230,17 @@ export function WizardForm() {
         return (
           <motion.div variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="space-y-8">
             <div className="border-b border-gray-100 pb-6">
-              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Academic Profile</h2>
-              <p className="text-gray-500 mt-2 text-lg">Detail your educational background and technical foundations.</p>
+              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Personal Background</h2>
+              <p className="text-gray-500 mt-2 text-lg">Help us understand the core narrative of your application essay.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormInput label="Highest Degree" isRequired placeholder="e.g. Bachelor's in CS" value={formData.academics.highestDegree} onChange={(e: any) => updateFields("academics", { highestDegree: e.target.value })} />
-              <FormInput label="Major / Field of Study" isRequired placeholder="e.g. Computer Engineering" value={formData.academics.major} onChange={(e: any) => updateFields("academics", { major: e.target.value })} />
-              <FormInput label="University Studied" isRequired placeholder="e.g. MIT" value={formData.academics.universityStudied} onChange={(e: any) => updateFields("academics", { universityStudied: e.target.value })} />
-              <FormInput label="CGPA / Grade" placeholder="e.g. 3.8/4.0" value={formData.academics.gpa} onChange={(e: any) => updateFields("academics", { gpa: e.target.value })} />
-              <FormTextarea label="Relevant Coursework" minRows={2} className="md:col-span-2" placeholder="e.g. Machine Learning, Distributed Systems..." value={formData.academics.relevantCourses} onChange={(e: any) => updateFields("academics", { relevantCourses: e.target.value })} />
-              <FormTextarea label="Academic Achievements" minRows={2} className="md:col-span-2" placeholder="Dean's list, scholarships, rank..." value={formData.academics.academicAchievements} onChange={(e: any) => updateFields("academics", { academicAchievements: e.target.value })} />
-              <FormTextarea label="Key Projects" className="md:col-span-2" placeholder="Describe 1-2 major academic projects." value={formData.academics.projects} onChange={(e: any) => updateFields("academics", { projects: e.target.value })} />
+              <FormTextarea label="Core Identity / Defining Story" isRequired className="md:col-span-2" placeholder="What is the one story or trait that defines you?" value={formData.personalBackground.story} onChange={(e: any) => updateFields("personalBackground", { story: e.target.value })} />
+              <FormTextarea label="Major Challenge Overcome" isRequired className="md:col-span-2" placeholder="Describe a time you faced adversity and how it changed you." value={formData.personalBackground.challenge} onChange={(e: any) => updateFields("personalBackground", { challenge: e.target.value })} />
+              <FormTextarea label="Unique Perspective" className="md:col-span-2" placeholder="How do you view the world differently than others?" value={formData.personalBackground.perspective} onChange={(e: any) => updateFields("personalBackground", { perspective: e.target.value })} />
             </div>
           </motion.div>
         );
       case 2:
-        return (
-          <motion.div variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="space-y-8">
-            <div className="border-b border-gray-100 pb-6">
-              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Work Experience</h2>
-              <p className="text-gray-500 mt-2 text-lg">Showcase your professional journey and responsibilities.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-               <FormInput label="Organization / Company" isRequired placeholder="e.g. Google" value={formData.workExperience.company} onChange={(e: any) => updateFields("workExperience", { company: e.target.value })} />
-               <FormInput label="Job Title" isRequired placeholder="e.g. Software Engineer" value={formData.workExperience.jobTitle} onChange={(e: any) => updateFields("workExperience", { jobTitle: e.target.value })} />
-               <FormTextarea label="Describe the organization" minRows={2} className="md:col-span-2" placeholder="What does the company do?" value={formData.workExperience.description} onChange={(e: any) => updateFields("workExperience", { description: e.target.value })} />
-               <FormTextarea label="Core Responsibilities" className="md:col-span-2" placeholder="What were your day to day tasks?" value={formData.workExperience.responsibilities} onChange={(e: any) => updateFields("workExperience", { responsibilities: e.target.value })} />
-               <FormTextarea label="Projects Worked On" className="md:col-span-2" placeholder="Specific impact and projects achieved?" value={formData.workExperience.projectsWorkedOn} onChange={(e: any) => updateFields("workExperience", { projectsWorkedOn: e.target.value })} />
-               <FormTextarea label="Skills Acquired" minRows={2} className="md:col-span-2" placeholder="e.g. Leadership, Node.js, Agile" value={formData.workExperience.skillsLearned} onChange={(e: any) => updateFields("workExperience", { skillsLearned: e.target.value })} />
-            </div>
-          </motion.div>
-        );
-      case 3:
         return (
           <motion.div variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="space-y-8">
             <div className="border-b border-gray-100 pb-6">
@@ -280,7 +256,7 @@ export function WizardForm() {
             </div>
           </motion.div>
         );
-      case 4:
+      case 3:
         return (
           <motion.div variants={slideVariants} initial="hidden" animate="visible" exit="exit" className="space-y-6 flex flex-col h-full">
             <div className="border-b border-gray-100 pb-4 flex-shrink-0">
@@ -337,7 +313,7 @@ export function WizardForm() {
             </div>
           </motion.div>
         );
-      case 5:
+      case 4:
         return (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col h-full space-y-6">
              <div className="flex flex-col sm:flex-row sm:items-center gap-4 border-b border-gray-100 pb-4">
@@ -346,7 +322,7 @@ export function WizardForm() {
                </div>
                <div>
                   <h2 className="text-2xl font-bold text-gray-900">
-                    {isGenerating ? "Drafting your SOP..." : "Your First Draft is Ready!"}
+                    {isGenerating ? "Drafting your Essay..." : "Your First Draft is Ready!"}
                   </h2>
                   <p className="text-gray-500 mt-1">
                      {isGenerating ? "Please wait while our AI synthesizes your profile and interview into a cohesive narrative." : "Structured using the \"Golden Thread\" framework based on your profile."}
@@ -369,7 +345,7 @@ export function WizardForm() {
                  {/* Left Column: SOP Editor View */}
                  <div id="sop-document" className="flex-1 bg-white rounded-2xl p-6 md:p-8 border border-gray-200 overflow-y-auto text-gray-800 text-[15px] leading-relaxed space-y-6 shadow-inner relative lg:w-2/3">
                    <div className="sticky top-0 bg-white/90 backdrop-blur-sm pb-3 border-b border-gray-100 mb-5 z-10">
-                     <h3 className="text-xl font-bold text-gray-900">Statement of Purpose: {formData.university.program || "Program"} ({formData.university.targetUniversity || "University"})</h3>
+                     <h3 className="text-xl font-bold text-gray-900">Application Essay: {formData.university.program || "Program"} ({formData.university.targetUniversity || "University"})</h3>
                    </div>
                    
                    <div className="group">
@@ -385,7 +361,7 @@ export function WizardForm() {
                    <div className="group">
                       <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">2</span>
-                        Academic Foundation (The Spike)
+                        Academic & Challenge (The Spike)
                       </h4>
                       <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
                         {generatedSOP.academic}
@@ -546,7 +522,7 @@ export function WizardForm() {
               disabled={isGenerating}
               className="bg-brand-primary text-white font-bold text-base shadow-[0_8px_20px_rgba(4,77,207,0.25)] hover:shadow-[0_12px_25px_rgba(4,77,207,0.35)] hover:-translate-y-0.5 transition-all active:scale-95 px-10 h-14 rounded-2xl flex items-center justify-center gap-2 group disabled:opacity-50 disabled:hover:scale-100" 
             >
-              <span>{isGenerating ? "Generating..." : "Generate Output SOP"}</span>
+              <span>{isGenerating ? "Generating..." : "Generate Output Essay"}</span>
               {!isGenerating && <ChevronRight size={20} className="text-white/80 group-hover:translate-x-1 transition-transform" />}
             </button>
           ) : (

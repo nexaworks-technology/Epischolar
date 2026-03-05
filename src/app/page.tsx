@@ -11,7 +11,7 @@ export default function Home() {
           Epischolar
         </h1>
         <p className="text-xl text-gray-600 mb-10 max-w-2xl">
-          The Self-Building University Service & Ivy-Grade SOP Generator.
+          The Self-Building University Service & Ivy-Grade Essay Generator.
         </p>
 
         <div className="flex gap-4">

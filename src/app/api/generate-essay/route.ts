@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         }
 
         const systemInstruction = `You are an elite, world-class Ivy League admissions consultant. 
-    You are writing a Statement of Purpose (SOP) for a Master's degree applicant. 
+    You are writing a highly personal College Application Essay for a prospective student. 
     You must use the "Narrative Hook" and "Slice of Life" frameworks found in '50 Successful Ivy League Application Essays'.
     
     CRITICAL CONSTRAINTS (The 25 Essay Mistakes to Avoid):
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
     
     ${uniData ? `University Research Data (MUST USE IN FUTURE GOALS SECTION):\n${JSON.stringify(uniData, null, 2)}` : ''}
     
-    Draft the SOP combining all this context seamlessly. Output ONLY valid JSON.
+    Draft the College Application Essay combining all this context seamlessly. Output ONLY valid JSON.
     `;
 
         const response = await ai.models.generateContent({
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     } catch (error) {
         console.error("Gemini API Error:", error);
         return NextResponse.json(
-            { error: "Failed to generate SOP" },
+            { error: "Failed to generate Essay" },
             { status: 500 }
         );
     }
