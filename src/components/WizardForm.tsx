@@ -112,10 +112,10 @@ export function WizardForm() {
         y += 8; // spacing after section
       };
 
-      addSection("1. Introduction (Hook & Motivation)", generatedSOP.introduction);
-      addSection("2. Academic Foundation (The Spike)", generatedSOP.academic);
-      addSection("3. Professional & Experiential Proof", generatedSOP.professional);
-      addSection("4. Why This University & Future Goals", generatedSOP.futureGoals);
+      addSection("1. The Scene", generatedSOP.paragraph1);
+      addSection("2. The Internal Pivot", generatedSOP.paragraph2);
+      addSection("3. The Action", generatedSOP.paragraph3);
+      addSection("4. The Synergy", generatedSOP.paragraph4);
 
       pdf.save(`${formData.university.targetUniversity || "University"}_Essay_Draft.pdf`);
     } catch (error) {
@@ -351,40 +351,40 @@ export function WizardForm() {
                    <div className="group">
                       <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">1</span>
-                        Introduction (Hook & Motivation)
+                        The Scene
                       </h4>
-                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
-                        {generatedSOP.introduction}
+                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors whitespace-pre-wrap">
+                        {generatedSOP.paragraph1}
                       </p>
                    </div>
 
                    <div className="group">
                       <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">2</span>
-                        Academic & Challenge (The Spike)
+                        The Internal Pivot
                       </h4>
-                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
-                        {generatedSOP.academic}
+                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors whitespace-pre-wrap">
+                        {generatedSOP.paragraph2}
                       </p>
                    </div>
 
                    <div className="group">
                       <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">3</span>
-                        Professional & Experiential Proof
+                        The Action
                       </h4>
-                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
-                        {generatedSOP.professional}
+                      <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors whitespace-pre-wrap">
+                        {generatedSOP.paragraph3}
                       </p>
                    </div>
                    
                    <div className="group">
                      <h4 className="font-semibold text-brand-primary mb-2 flex items-center gap-2">
                         <span className="w-6 h-6 rounded-full bg-brand-bot text-brand-primary flex items-center justify-center text-xs">4</span>
-                        Why This University & Future Goals
+                        The Synergy
                      </h4>
-                     <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors">
-                       {generatedSOP.futureGoals}
+                     <p className="pl-8 text-gray-600 group-hover:text-gray-900 transition-colors whitespace-pre-wrap">
+                       {generatedSOP.paragraph4}
                      </p>
                    </div>
                  </div>

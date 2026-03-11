@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
+import { CORE_GENERATION_CONSTRAINTS } from "@/prompts/ivy-league-logic";
 
 // Initialize Gemini
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -39,23 +40,18 @@ export async function POST(req: Request) {
     You are writing a highly personal College Application Essay for a prospective student. 
     You must use the "Narrative Hook" and "Slice of Life" frameworks found in '50 Successful Ivy League Application Essays'.
     
-    CRITICAL CONSTRAINTS (The 25 Essay Mistakes to Avoid):
-    - NO clichés (e.g., "Since I was a child...", "I have always been passionate about...").
-    - NO resume-listing. Do not just list achievements; tell a story about one or two.
-    - NO passive voice. Use strong, active verbs.
-    - NO generic praise for the university. Be highly specific.
-    - SHOW, DON'T TELL. Describe a specific moment or "Slice of Life" that demonstrates the applicant's qualities.
+    ${CORE_GENERATION_CONSTRAINTS}
 
     You MUST return the output strictly as a JSON object with exactly these keys:
     {
-      "introduction": "A compelling 'Narrative Hook' and 'Slice of Life' opening (approx 100-150 words)",
-      "academic": "Academic foundation and the applicant's unique 'Spike' (approx 150-200 words)",
-      "professional": "Professional & Experiential Proof told through a specific challenge (approx 150-200 words)",
-      "futureGoals": "Why This University & Future Goals. YOU MUST weave in the specific professors, labs, or core values provided in the University Research Data below (approx 100-150 words)",
+      "paragraph1": "Para 1 (The Scene): Start in media res using sensory details from Step 2 of the chat (approx 150 words)",
+      "paragraph2": "Para 2 (The Internal Pivot): Detail the student's internal monologue, doubts, and realization (approx 150 words)",
+      "paragraph3": "Para 3 (The Action): Show the research or change in behavior resulting from the realization (approx 150 words)",
+      "paragraph4": "Para 4 (The Synergy): Connect the action to the specific university data scraped from the backend (approx 150 words)",
       "analysis": [
          {
-           "paragraph": "introduction" | "academic" | "professional" | "futureGoals",
-           "principle": "e.g., Intellectual Vitality, Narrative Hook, Showing vs Telling",
+           "paragraph": "paragraph1" | "paragraph2" | "paragraph3" | "paragraph4",
+           "principle": "e.g., Sensory Details, Internal Monologue, Showing vs Telling, University Alignment",
            "explanation": "A short 1-sentence tooltip explaining why this paragraph succeeds based on Ivy League principles."
          }
       ]
@@ -83,24 +79,25 @@ export async function POST(req: Request) {
             contents: prompt,
             config: {
                 systemInstruction,
-                temperature: 0.7,
+                temperature: 0.4,
                 responseMimeType: "application/json",
             }
         });
 
         let jsonResponse;
         if (response.text) {
-            jsonResponse = JSON.parse(response.text);
+            const cleanText = response.text.replace(/```json/g, '').replace(/```/g, '').trim();
+            jsonResponse = JSON.parse(cleanText);
         } else {
             throw new Error("Empty response from AI");
         }
 
         return NextResponse.json(jsonResponse);
 
-    } catch (error) {
-        console.error("Gemini API Error:", error);
+    } catch (error: any) {
+        console.error("Gemini API Error:", error.message || error);
         return NextResponse.json(
-            { error: "Failed to generate Essay" },
+            { error: "Failed to generate Essay", details: error.message },
             { status: 500 }
         );
     }
