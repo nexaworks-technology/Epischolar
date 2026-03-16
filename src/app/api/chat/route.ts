@@ -1,10 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 
-// Initialize Gemini
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
 export async function POST(req: Request) {
+    // Initialize Gemini within the handler to prevent build-time errors
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    
     try {
         const { messages, userProfile } = await req.json();
 
